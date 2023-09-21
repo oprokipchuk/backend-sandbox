@@ -1,11 +1,17 @@
 # Intellij
+*.iws
 *.iml
-/.idea/
+*.ipr
+**/.idea/
 
 # Gradle
-/.gradle/
-/build/
+**/.gradle/
+**/build/
 
 # Maven
-/.profiler/
-/target/
+**/.profiler/
+**/target/
+**/.mvn/wrapper/maven-wrapper.jar
+
+### VS Code ###
+**/.vscode/
