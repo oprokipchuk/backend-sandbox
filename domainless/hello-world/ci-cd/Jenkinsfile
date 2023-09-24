@@ -2,9 +2,9 @@ def GIR_REPO_URL = 'https://github.com/oprokipchuk/backend-sandbox'
 
 pipeline {
     agent {
-        //dockerContainer(image: 'maven:3.9.4')
         docker {
             image 'maven:3.9.4'
+            args '-u root'
         }
     }
 
