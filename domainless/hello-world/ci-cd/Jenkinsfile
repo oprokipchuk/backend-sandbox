@@ -1,11 +1,32 @@
+def GIR_REPO_URL = 'https://github.com/oprokipchuk/backend-sandbox'
+
 pipeline {
-    agent any
+    agent {
+        docker {
+            image 'maven:3.9.4'
+        }
+    }
 
     stages {
-        stage('Hello') {
+        stage('Checkout') {
             steps {
-                echo 'Hello World!'
+                checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: GIR_REPO_URL]]])
             }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build successful!'
+        }
+
+        failure {
+            echo 'Build failed!'
         }
     }
 }
