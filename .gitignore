@@ -17,4 +17,4 @@
 **/.vscode/
 
 # Util
-/private/
+/.util/
