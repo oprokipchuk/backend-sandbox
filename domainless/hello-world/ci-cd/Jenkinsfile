@@ -17,7 +17,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir('domainless/hello-world') {
-                    sh 'mvn clean install'
+                    sh 'mvn --no-transfer-progress clean install'
                 }
             }
         }
