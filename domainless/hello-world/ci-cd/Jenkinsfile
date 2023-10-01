@@ -1,20 +1,40 @@
-def GIR_REPO_URL = 'https://github.com/oprokipchuk/backend-sandbox'
-
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.9.4'
-            args '-u root'
-        }
-    }
+    agent any
 
     stages {
-        stage('Build') {
+        stage('Application: Maven Build') {
+            agent {
+                docker {
+                    image 'maven:3.9.4-eclipse-temurin-17-alpine'
+                    args '-u root'
+                }
+            }
             steps {
                 dir('domainless/hello-world') {
                     sh 'mvn --no-transfer-progress clean install'
                 }
             }
+        }
+        stage('Docker Image: Build & Push') {
+           steps {
+               withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                   script {
+                       def APP_NAME = 'hello-world'
+                       def IMAGE_TAG = new Date().format("yyyy-MM-dd-HHmmss")
+
+                       def IMAGE_FULL_NAME = "${DOCKER_HUB_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
+                       echo "Image Full Name is: ${IMAGE_FULL_NAME}"
+
+                       def DOCKERFILE_PATH = 'ci-cd/Dockerfile'
+
+                       sh "docker build -t ${IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ."
+
+                       sh "echo -n '${DOCKER_HUB_TOKEN}' | docker login -u ${DOCKER_HUB_USERNAME} --password-stdin"
+
+                       sh "docker push ${IMAGE_FULL_NAME}"
+                   }
+               }
+           }
         }
     }
 
