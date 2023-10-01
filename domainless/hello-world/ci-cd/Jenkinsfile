@@ -9,11 +9,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                checkout([$class: 'GitSCM', branches: [[name: '*/master']], userRemoteConfigs: [[url: GIR_REPO_URL]]])
-            }
-        }
         stage('Build') {
             steps {
                 dir('domainless/hello-world') {
