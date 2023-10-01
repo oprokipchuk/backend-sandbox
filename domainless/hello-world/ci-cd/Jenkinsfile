@@ -1,3 +1,5 @@
+def PROJECT_PATH = 'domainless/hello-world'
+
 pipeline {
     agent any
 
@@ -10,7 +12,7 @@ pipeline {
                 }
             }
             steps {
-                dir('domainless/hello-world') {
+                dir(PROJECT_PATH) {
                     sh 'mvn --no-transfer-progress clean install'
                 }
             }
@@ -25,9 +27,9 @@ pipeline {
                        def IMAGE_FULL_NAME = "${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
                        echo "Image Full Name is: ${IMAGE_FULL_NAME}"
 
-                       def DOCKERFILE_PATH = 'domainless/hello-world/ci-cd/Dockerfile'
+                       def DOCKERFILE_PATH = "${PROJECT_PATH}/ci-cd/Dockerfile"
 
-                       sh "docker build -t ${IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ."
+                       sh "docker build -t ${IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}"
 
                        sh "echo -n '${DOCKER_ACCESS_TOKEN}' | docker login -u ${DOCKER_USERNAME} --password-stdin"
 
