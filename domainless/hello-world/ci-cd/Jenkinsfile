@@ -25,7 +25,7 @@ pipeline {
                        def IMAGE_FULL_NAME = "${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
                        echo "Image Full Name is: ${IMAGE_FULL_NAME}"
 
-                       def DOCKERFILE_PATH = 'ci-cd/Dockerfile'
+                       def DOCKERFILE_PATH = 'domainless/hello-world/ci-cd/Dockerfile'
 
                        sh "docker build -t ${IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ."
 
