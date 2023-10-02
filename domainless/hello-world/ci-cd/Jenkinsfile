@@ -3,6 +3,7 @@ def PROJECT_PATH = 'domainless/hello-world'
 def APP_NAME = 'hello-world'
 def IMAGE_TAG = new Date().format("yyyy-MM-dd-HHmmss")
 
+def DOCKER_USERNAME = credentials('docker').username
 def IMAGE_FULL_NAME = "${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
 echo "Image Full Name is: ${IMAGE_FULL_NAME}"
 
@@ -25,7 +26,7 @@ pipeline {
         }
         stage('Docker Image: Build & Push') {
            steps {
-               withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_ACCESS_TOKEN')]) {
+               withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'DOCKER_ACCESS_TOKEN')]) {
                    script {
                        def DOCKERFILE_PATH = "${PROJECT_PATH}/ci-cd/Dockerfile"
 
