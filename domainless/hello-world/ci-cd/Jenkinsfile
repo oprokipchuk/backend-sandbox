@@ -1,5 +1,11 @@
 def PROJECT_PATH = 'domainless/hello-world'
 
+def APP_NAME = 'hello-world'
+def IMAGE_TAG = new Date().format("yyyy-MM-dd-HHmmss")
+
+def IMAGE_FULL_NAME = "${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
+echo "Image Full Name is: ${IMAGE_FULL_NAME}"
+
 pipeline {
     agent any
 
@@ -21,12 +27,6 @@ pipeline {
            steps {
                withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_ACCESS_TOKEN')]) {
                    script {
-                       def APP_NAME = 'hello-world'
-                       def IMAGE_TAG = new Date().format("yyyy-MM-dd-HHmmss")
-
-                       def IMAGE_FULL_NAME = "${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
-                       echo "Image Full Name is: ${IMAGE_FULL_NAME}"
-
                        def DOCKERFILE_PATH = "${PROJECT_PATH}/ci-cd/Dockerfile"
 
                        sh "docker build -t ${IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}"
@@ -37,6 +37,25 @@ pipeline {
                    }
                }
            }
+        }
+        stage('Kubernetes: Deploy') {
+            agent {
+                docker {
+                    image 'odaniait/aws-kubectl'
+                }
+            }
+            steps {
+                withAWS(role: env.AWS_JENKINS_ROLE, roleAccount: env.AWS_ACCOUNT, region: env.AWS_REGION, duration: 600, roleSessionName: 'jenkins-session') {
+                    def EKS_CLUSTER_NAME = env.EKS_CLUSTER_NAME
+                    def K8S_FILE_PATH = "${PROJECT_PATH}/ci-cd/k8s.yml"
+
+                    sh "aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME}"
+                    sh """
+                        sed -i "s|image_id|${IMAGE_FULL_NAME}|" ${K8S_FILE_PATH}
+                        kubectl apply -f ${K8S_FILE_PATH}
+                    """
+                }
+            }
         }
     }
 
