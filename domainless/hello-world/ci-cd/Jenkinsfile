@@ -1,12 +1,6 @@
 def PROJECT_PATH = 'domainless/hello-world'
 def APP_NAME = 'hello-world'
 
-def IMAGE_TAG = new Date().format("yyyy-MM-dd-HHmmss")
-withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME')]) {
-    env.IMAGE_FULL_NAME = "${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
-}
-echo "Image Full Name is: ${env.IMAGE_FULL_NAME}"
-
 pipeline {
     agent any
 
@@ -28,6 +22,11 @@ pipeline {
            steps {
                withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_ACCESS_TOKEN')]) {
                    script {
+                       def IMAGE_TAG = new Date().format("yyyy-MM-dd-HHmmss")
+
+                       env.IMAGE_FULL_NAME = "${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
+                       echo "Image Full Name is: ${env.IMAGE_FULL_NAME}"
+
                        def DOCKERFILE_PATH = "${PROJECT_PATH}/ci-cd/Dockerfile"
 
                        sh "docker build -t ${env.IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}"
