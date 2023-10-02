@@ -45,7 +45,7 @@ pipeline {
                 }
             }
             steps {
-                withAWS(role: env.AWS_JENKINS_ROLE, roleAccount: env.AWS_ACCOUNT, region: env.AWS_REGION, duration: 600, roleSessionName: 'jenkins-session') {
+                withAWS(role: env.AWS_JENKINS_ROLE, roleAccount: env.AWS_ACCOUNT, region: env.AWS_REGION, roleSessionName: 'jenkins-session') {
                     script {
                         def K8S_FILE_PATH = "${PROJECT_PATH}/ci-cd/k8s.yml"
 
