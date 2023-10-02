@@ -1,11 +1,11 @@
 def PROJECT_PATH = 'domainless/hello-world'
-
 def APP_NAME = 'hello-world'
-def IMAGE_TAG = new Date().format("yyyy-MM-dd-HHmmss")
 
-def DOCKER_USERNAME = credentials('docker').username
-def IMAGE_FULL_NAME = "${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
-echo "Image Full Name is: ${IMAGE_FULL_NAME}"
+def IMAGE_TAG = new Date().format("yyyy-MM-dd-HHmmss")
+withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME')]) {
+    env.IMAGE_FULL_NAME = "${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
+}
+echo "Image Full Name is: ${env.IMAGE_FULL_NAME}"
 
 pipeline {
     agent any
@@ -26,15 +26,15 @@ pipeline {
         }
         stage('Docker Image: Build & Push') {
            steps {
-               withCredentials([usernamePassword(credentialsId: 'docker', passwordVariable: 'DOCKER_ACCESS_TOKEN')]) {
+               withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_ACCESS_TOKEN')]) {
                    script {
                        def DOCKERFILE_PATH = "${PROJECT_PATH}/ci-cd/Dockerfile"
 
-                       sh "docker build -t ${IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}"
+                       sh "docker build -t ${env.IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}"
 
                        sh "echo -n '${DOCKER_ACCESS_TOKEN}' | docker login -u ${DOCKER_USERNAME} --password-stdin"
 
-                       sh "docker push ${IMAGE_FULL_NAME}"
+                       sh "docker push ${env.IMAGE_FULL_NAME}"
                    }
                }
            }
@@ -48,12 +48,11 @@ pipeline {
             steps {
                 withAWS(role: env.AWS_JENKINS_ROLE, roleAccount: env.AWS_ACCOUNT, region: env.AWS_REGION, duration: 600, roleSessionName: 'jenkins-session') {
                     script {
-                        def EKS_CLUSTER_NAME = env.EKS_CLUSTER_NAME
                         def K8S_FILE_PATH = "${PROJECT_PATH}/ci-cd/k8s.yml"
 
-                        sh "aws eks update-kubeconfig --name ${EKS_CLUSTER_NAME}"
+                        sh "aws eks update-kubeconfig --name ${env.EKS_CLUSTER_NAME}"
                         sh """
-                            sed -i "s|image_id|${IMAGE_FULL_NAME}|" ${K8S_FILE_PATH}
+                            sed -i "s|image_id|${env.IMAGE_FULL_NAME}|" ${K8S_FILE_PATH}
                             kubectl apply -f ${K8S_FILE_PATH}
                         """
                     }
