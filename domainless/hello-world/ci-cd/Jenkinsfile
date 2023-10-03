@@ -29,7 +29,7 @@ pipeline {
 
                        def DOCKERFILE_PATH = "${PROJECT_PATH}/ci-cd/Dockerfile"
 
-                       sh "docker build -t ${env.IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}"
+                       sh "docker buildx build --platform linux/amd64,linux/arm64 -t ${env.IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}"
 
                        sh "echo -n '${DOCKER_ACCESS_TOKEN}' | docker login -u ${DOCKER_USERNAME} --password-stdin"
 
