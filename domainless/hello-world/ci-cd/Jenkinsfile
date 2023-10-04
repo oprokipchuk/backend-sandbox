@@ -59,21 +59,17 @@ pipeline {
 
     post {
         always {
-            stage('Cleanup') {
-                steps {
-                    script {
-                        echo "Doing Cleanup"
-                        if (env.IMAGE_FULL_NAME) {
-                            sh "docker image rm -f ${env.IMAGE_FULL_NAME}"
-                        }
-
-                        // Clean caches
-                        sh """
-                            docker builder prune -f
-                            docker buildx prune -f
-                        """
-                    }
+            script {
+                echo 'Doing Cleanup'
+                if (env.IMAGE_FULL_NAME) {
+                    sh "docker image rm -f ${env.IMAGE_FULL_NAME}"
                 }
+
+                // Clean caches
+                sh """
+                    docker builder prune -f
+                    docker buildx prune -f
+                """
             }
         }
 
