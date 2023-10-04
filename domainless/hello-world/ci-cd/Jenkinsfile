@@ -24,7 +24,10 @@ pipeline {
                     script {
                         def IMAGE_TAG = new Date().format("yyyy-MM-dd-HHmmss")
 
-                        env.IMAGE_FULL_NAME = "${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
+                        def IMAGE_NAME = "${DOCKER_USERNAME}/${APP_NAME}"
+                        def IMAGE_LATEST_NAME = "${IMAGE_NAME}:latest"
+
+                        env.IMAGE_FULL_NAME = "${IMAGE_NAME}:${IMAGE_TAG}"
                         echo "Image Full Name is: ${env.IMAGE_FULL_NAME}"
 
                         def DOCKERFILE_PATH = "${PROJECT_PATH}/ci-cd/Dockerfile"
@@ -33,7 +36,7 @@ pipeline {
 
                         sh """
                             docker buildx inspect --bootstrap
-                            docker buildx build --platform linux/amd64,linux/arm64 --push -t ${env.IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}
+                            docker buildx build --platform linux/amd64,linux/arm64 --push -t ${env.IMAGE_FULL_NAME} -t ${IMAGE_LATEST_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}
                         """
                     }
                 }
