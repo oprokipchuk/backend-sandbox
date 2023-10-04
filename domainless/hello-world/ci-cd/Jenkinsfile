@@ -29,17 +29,9 @@ pipeline {
 
                         def DOCKERFILE_PATH = "${PROJECT_PATH}/ci-cd/Dockerfile"
 
-                        sh "docker buildx build --platform linux/amd64,linux/arm64 -t ${env.IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}"
-
                         sh "echo -n '${DOCKER_ACCESS_TOKEN}' | docker login -u ${DOCKER_USERNAME} --password-stdin"
 
-                        sh "docker push ${env.IMAGE_FULL_NAME}"
-
-                        sh """
-                            docker image rm -f ${env.IMAGE_FULL_NAME}
-                            docker builder prune -f
-                            docker buildx prune -f
-                        """
+                        sh "docker buildx build --platform linux/amd64,linux/arm64 --push -t ${env.IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}"
                     }
                 }
             }
@@ -66,6 +58,25 @@ pipeline {
     }
 
     post {
+        always {
+            stage('Cleanup') {
+                steps {
+                    script {
+                        echo "Doing Cleanup"
+                        if (env.IMAGE_FULL_NAME) {
+                            sh "docker image rm -f ${env.IMAGE_FULL_NAME}"
+                        }
+
+                        // Clean caches
+                        sh """
+                            docker builder prune -f
+                            docker buildx prune -f
+                        """
+                    }
+                }
+            }
+        }
+
         success {
             echo 'Build successful!'
         }
