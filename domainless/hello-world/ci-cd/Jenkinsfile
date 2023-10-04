@@ -31,7 +31,10 @@ pipeline {
 
                         sh "echo -n '${DOCKER_ACCESS_TOKEN}' | docker login -u ${DOCKER_USERNAME} --password-stdin"
 
-                        sh "docker buildx build --platform linux/amd64,linux/arm64 --push -t ${env.IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}"
+                        sh """
+                            docker buildx inspect --bootstrap
+                            docker buildx build --platform linux/amd64,linux/arm64 --push -t ${env.IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}
+                        """
                     }
                 }
             }
