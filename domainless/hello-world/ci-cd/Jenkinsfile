@@ -19,24 +19,30 @@ pipeline {
             }
         }
         stage('Docker Image: Build & Push') {
-           steps {
-               withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_ACCESS_TOKEN')]) {
-                   script {
-                       def IMAGE_TAG = new Date().format("yyyy-MM-dd-HHmmss")
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_ACCESS_TOKEN')]) {
+                    script {
+                        def IMAGE_TAG = new Date().format("yyyy-MM-dd-HHmmss")
 
-                       env.IMAGE_FULL_NAME = "${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
-                       echo "Image Full Name is: ${env.IMAGE_FULL_NAME}"
+                        env.IMAGE_FULL_NAME = "${DOCKER_USERNAME}/${APP_NAME}:${IMAGE_TAG}"
+                        echo "Image Full Name is: ${env.IMAGE_FULL_NAME}"
 
-                       def DOCKERFILE_PATH = "${PROJECT_PATH}/ci-cd/Dockerfile"
+                        def DOCKERFILE_PATH = "${PROJECT_PATH}/ci-cd/Dockerfile"
 
-                       sh "docker buildx build --platform linux/amd64,linux/arm64 -t ${env.IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}"
+                        sh "docker buildx build --platform linux/amd64,linux/arm64 -t ${env.IMAGE_FULL_NAME} -f ${DOCKERFILE_PATH} ${PROJECT_PATH}"
 
-                       sh "echo -n '${DOCKER_ACCESS_TOKEN}' | docker login -u ${DOCKER_USERNAME} --password-stdin"
+                        sh "echo -n '${DOCKER_ACCESS_TOKEN}' | docker login -u ${DOCKER_USERNAME} --password-stdin"
 
-                       sh "docker push ${env.IMAGE_FULL_NAME}"
-                   }
-               }
-           }
+                        sh "docker push ${env.IMAGE_FULL_NAME}"
+
+                        sh """
+                            docker image rm -f ${env.IMAGE_FULL_NAME}
+                            docker builder prune -f
+                            docker buildx prune -f
+                        """
+                    }
+                }
+            }
         }
         stage('Kubernetes: Deploy') {
             agent {
