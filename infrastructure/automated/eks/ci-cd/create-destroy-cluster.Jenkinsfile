@@ -4,7 +4,7 @@ def APP_NAME = 'hello-world'
 pipeline {
     agent {
         docker {
-            image 'oprokipchuk/backend-sandbox-cicd'
+            image 'oprokipchuk/backend-sandbox-cicd:latest'
             args '-u root'
         }
     }
