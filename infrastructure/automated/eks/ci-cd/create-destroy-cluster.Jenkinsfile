@@ -2,9 +2,11 @@ def PROJECT_PATH = 'domainless/hello-world'
 def APP_NAME = 'hello-world'
 
 pipeline {
-    agent docker {
-        image 'oprokipchuk/backend-sandbox-cicd'
-        args '-u root'
+    agent {
+        docker {
+            image 'oprokipchuk/backend-sandbox-cicd'
+            args '-u root'
+        }
     }
 
     stages {
