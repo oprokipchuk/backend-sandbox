@@ -6,6 +6,7 @@ pipeline {
         docker {
             image 'oprokipchuk/backend-sandbox-cicd:latest'
             args '-u root'
+            alwaysPull true
         }
     }
 
