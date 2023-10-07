@@ -7,7 +7,7 @@ resource "aws_subnet" "public-eu-central-1a" {
   tags = {
     "Name"                       = "eks-public-eu-central-1a"
     "kubernetes.io/role/elb"     = "1"
-    "kubernetes.io/cluster/${local.cluster_name}" = "owned"
+    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
   }
 }
 
@@ -20,6 +20,6 @@ resource "aws_subnet" "public-eu-central-1b" {
   tags = {
     "Name"                       = "eks-public-eu-central-1b"
     "kubernetes.io/role/elb"     = "1"
-    "kubernetes.io/cluster/${local.cluster_name}" = "owned"
+    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
   }
 }
