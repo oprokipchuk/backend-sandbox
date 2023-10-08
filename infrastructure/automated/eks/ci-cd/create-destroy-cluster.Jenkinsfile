@@ -35,7 +35,7 @@ pipeline {
         stage('Terraform: Action') {
             steps {
                 dir(TERRAFORM_PATH) {
-                    sh "terraform ${TERRAFORM_ACTION} --auto-approve"
+                    sh "terraform ${TERRAFORM_ACTION} -var="cluster_name=${env.EKS_CLUSTER_NAME}" --auto-approve"
                 }
             }
         }
