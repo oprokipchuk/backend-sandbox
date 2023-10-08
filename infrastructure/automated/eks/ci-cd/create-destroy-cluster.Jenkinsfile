@@ -35,7 +35,7 @@ pipeline {
         stage('Terraform: Action') {
             steps {
                 dir(TERRAFORM_PATH) {
-                    //sh "terraform %{TERRAFORM_ACTION} --auto-approve"
+                    sh "terraform %{TERRAFORM_ACTION} --auto-approve"
                 }
             }
         }
@@ -43,10 +43,10 @@ pipeline {
             steps {
                 script {
                     if (isCreateAction()) {
-                        //def K8S_FILE_PATH = "${PROJECT_PATH}/ci-cd/k8s.yml"
+                        def K8S_FILE_PATH = "${PROJECT_PATH}/ci-cd/k8s.yml"
 
-                        //sh "aws eks update-kubeconfig --name ${env.EKS_CLUSTER_NAME} --region ${env.AWS_REGION}"
-                        //sh "kubectl apply -f ${K8S_FILE_PATH}"
+                        sh "aws eks update-kubeconfig --name ${env.EKS_CLUSTER_NAME} --region ${env.AWS_REGION}"
+                        sh "kubectl apply -f ${K8S_FILE_PATH}"
                     }
                 }
             }
