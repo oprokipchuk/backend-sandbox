@@ -47,6 +47,7 @@ pipeline {
                 docker {
                     image 'oprokipchuk/backend-sandbox-cicd'
                     args '-u root'
+                    alwaysPull true
                 }
             }
             steps {

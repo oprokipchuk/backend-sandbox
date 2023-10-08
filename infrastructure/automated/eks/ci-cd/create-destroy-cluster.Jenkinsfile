@@ -21,10 +21,16 @@ pipeline {
     post {
         success {
             echo 'Build successful!'
+            mail to: "${env.ADMIN_EMAIL}",
+                 subject: "Test Success Email",
+                 body: "Test Success"
         }
 
-        failure {
+        unsuccessful {
             echo 'Build failed!'
+            mail to: "${env.ADMIN_EMAIL}",
+                 subject: "Test Success Email",
+                 body: "Test Success"
         }
     }
 }
