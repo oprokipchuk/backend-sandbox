@@ -21,14 +21,14 @@ pipeline {
         stage('Terraform: Init') {
             steps {
                 dir(TERRAFORM_PATH) {
-                    //sh 'terraform init'
+                    sh 'terraform init'
                 }
             }
         }
         stage('Terraform: Validate') {
             steps {
                 dir(TERRAFORM_PATH) {
-                    //sh 'terraform validate'
+                    sh 'terraform validate'
                 }
             }
         }

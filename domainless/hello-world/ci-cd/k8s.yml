@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: hello-world
-          image: image_id
+          image: oprokipchuk/hello-world:latest
           ports:
             - containerPort: 80
           env:
