@@ -23,14 +23,14 @@ pipeline {
             echo 'Build successful!'
             mail to: "${env.ADMIN_EMAIL}",
                  subject: "Test Success Email",
-                 body: "Test Success"
+                 body: "Test Success ${action}"
         }
 
         unsuccessful {
             echo 'Build failed!'
             mail to: "${env.ADMIN_EMAIL}",
                  subject: "Test Success Email",
-                 body: "Test Success"
+                 body: "Test Success ${action}"
         }
     }
 }
