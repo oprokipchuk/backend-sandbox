@@ -1,5 +1,12 @@
 def PROJECT_PATH = 'domainless/hello-world'
-def APP_NAME = 'hello-world'
+def TERRAFORM_PATH = 'infrastructure/automated/eks'
+
+def isCreateAction() {
+    return action == "create"
+}
+
+def TERRAFORM_ACTION = isCreateAction() ? "apply" : "destroy"
+echo "Running with terraform action: ${TERRAFORM_ACTION}"
 
 pipeline {
     agent {
@@ -11,9 +18,37 @@ pipeline {
     }
 
     stages {
-        stage('Test Echo') {
+        stage('Terraform: Init') {
             steps {
-                sh 'ls'
+                dir(TERRAFORM_PATH) {
+                    //sh 'terraform init'
+                }
+            }
+        }
+        stage('Terraform: Validate') {
+            steps {
+                dir(TERRAFORM_PATH) {
+                    //sh 'terraform validate'
+                }
+            }
+        }
+        stage('Terraform: Action') {
+            steps {
+                dir(TERRAFORM_PATH) {
+                    //sh "terraform %{TERRAFORM_ACTION} --auto-approve"
+                }
+            }
+        }
+        stage('Kubernetes: Resources') {
+            steps {
+                script {
+                    if (isCreateAction()) {
+                        //def K8S_FILE_PATH = "${PROJECT_PATH}/ci-cd/k8s.yml"
+
+                        //sh "aws eks update-kubeconfig --name ${env.EKS_CLUSTER_NAME} --region ${env.AWS_REGION}"
+                        //sh "kubectl apply -f ${K8S_FILE_PATH}"
+                    }
+                }
             }
         }
     }
@@ -22,15 +57,14 @@ pipeline {
         success {
             echo 'Build successful!'
             mail to: "${env.ADMIN_EMAIL}",
-                 subject: "Test Success Email",
-                 body: "Test Success ${action}"
+                 subject: "Build #${BUILD_NUMBER}: Success",
+                 body: "The EKS cluster's action [${TERRAFORM_ACTION}] has been done successfully."
         }
-
         unsuccessful {
             echo 'Build failed!'
             mail to: "${env.ADMIN_EMAIL}",
-                 subject: "Test Success Email",
-                 body: "Test Success ${action}"
+                 subject: "Build #${BUILD_NUMBER}: Failure",
+                 body: "The EKS cluster's action [${TERRAFORM_ACTION}] has been failed."
         }
     }
 }
