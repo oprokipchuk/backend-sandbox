@@ -1,0 +1,3 @@
+SUCCESS = {
+    "statusCode": 200
+}

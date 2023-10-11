@@ -26,3 +26,7 @@
 *.tfstate.*
 *.tfvars
 *.tfvars.json
+
+# Serverless
+**/.serverless/
+config.yml

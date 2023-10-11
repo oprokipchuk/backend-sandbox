@@ -1,0 +1,73 @@
+service: lambda
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  region: eu-central-1
+  runtime: python3.10
+  apiName: eks-cluster-controls
+  apiGateway:
+    apiKeys:
+      - eks-controls-key
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - ec2:StartInstances
+        - ec2:StopInstances
+      Resource: "arn:aws:ec2:eu-central-1:352003760105:instance/i-0c4832adc2651b09a"
+    - Effect: Allow
+      Action:
+        - ec2:DescribeInstances
+        - ec2:ReportInstanceStatus
+        - ec2:DescribeInstanceStatus
+        - ec2:Wait
+      Resource: "*"
+  environment:
+    REGION: 'eu-central-1'
+    JENKINS_INSTANCE_ID: 'i-0c4832adc2651b09a'
+    JENKINS_URL: 'http://jenkins.oprokipchuk.com'
+    JENKINS_JOB_NAME: 'create-destroy-cluster'
+    JENKINS_JOB_TOKEN: ${file(./config.yml):jenkins_job_token}
+
+
+package:
+  patterns:
+    - '!*.iml'
+    - '!*.zip'
+    - '!function_runner.py'
+    - '!config.yml'
+
+functions:
+  create-eks-cluster:
+    name: create-eks-cluster
+    handler: create_cluster_function.lambda_handler
+    memorySize: 128
+    timeout: 60
+    architecture: x86_64
+    events:
+      - http:
+          path: create-eks-cluster
+          method: POST
+          private: true
+  destroy-eks-cluster:
+    name: destroy-eks-cluster
+    handler: destroy_cluster_function.lambda_handler
+    memorySize: 128
+    timeout: 60
+    architecture: x86_64
+    events:
+      - http:
+          path: destroy-eks-cluster
+          method: POST
+          private: true
+  stop-jenkins-instance:
+    name: stop-jenkins-instance
+    handler: stop_jenkins_function.lambda_handler
+    memorySize: 128
+    timeout: 60
+    architecture: x86_64
+    events:
+      - http:
+          path: stop-jenkins-instance
+          method: POST
+          private: true
