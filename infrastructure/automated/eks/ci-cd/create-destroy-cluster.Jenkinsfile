@@ -18,6 +18,13 @@ pipeline {
     }
 
     stages {
+        stage('Notification') {
+            steps {
+                mail to: "${env.ADMIN_EMAIL}",
+                     subject: "Build #${BUILD_NUMBER}: Started",
+                     body: "The build to execute EKS cluster's action [${TERRAFORM_ACTION}] has been started."
+            }
+        }
         stage('Terraform: Init') {
             steps {
                 dir(TERRAFORM_PATH) {
