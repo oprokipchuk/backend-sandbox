@@ -1,3 +1,3 @@
 # backend-sandbox
 
-![Self-editing Diagram](http://oprokipchuk.github.io/backend-sandbox/test_svg.drawio.svg)
+![Self-editing Diagram](https://github.com/oprokipchuk/backend-sandbox/blob/master/test_svg.drawio.svg)
