@@ -89,3 +89,9 @@ AWS Services and Resources:
 - Facing Public Traffic:
   - Classic Load Balancer
   - API Gateway to Lambda (API key, stage, custom domain, HTTPS)
+
+## TODO
+- [ ] Jenkins: add build configuration info (settings, parameters) into Jenkinsfiles
+- [ ] Lambda functions: automate deployment
+- [ ] Lambda functions: set up local testing
+- [ ] Lambda functions: testing pipeline
