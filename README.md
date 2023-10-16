@@ -26,4 +26,66 @@ The application and all the used tools, including Jenkins are hosted on AWS clou
 [![Infrastructure Diagram](https://github.com/oprokipchuk/backend-sandbox/blob/master/diagrams/infrastructure.drawio.svg?raw=true)](https://viewer.diagrams.net/?tags=%7B%7D&target=blank&highlight=0000ff&edit=https%3A%2F%2Fapp.diagrams.net%2F%3Flibs%3Dgeneral%3Baws4%23Hoprokipchuk%252Fbackend-sandbox%252Fmaster%252Fdiagrams%252Finfrastructure.drawio.svg&layers=1&nav=1&title=infrastructure.drawio.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Foprokipchuk%2Fbackend-sandbox%2Fmaster%2Fdiagrams%2Finfrastructure.drawio.svg)
 
 ## Technologies
-List the technologies and tools used in your project. This can include programming languages, frameworks, libraries, and any other relevant technologies.
+Here is the list of the technologies used in this sandbox.
+
+Applications:
+- Backend Service:
+  - Spring Boot
+  - Maven
+- Lambda cluster controls:
+  - Python
+  - Serverless 
+
+Tools:
+- Docker:
+  - Multi-Platform image build
+  - DockerHub repo
+  - Running containers
+  - Volumes
+  - Clearing resources out
+- Kubernetes:
+  - Configuring kube-contexts
+  - Applying/deleting file-resources
+  - Triggering external resources through Kubernetes configuration and annotations
+- Jenkins:
+  - Hosted on EC2
+  - Docker Agents
+  - Groovy pipeline definitions in SCM
+  - SCM Webhook and REST triggers
+  - Email notifications
+- Terraform:
+  - AWS and Kubernetes providers
+  - Environment variables
+  - Remote backend
+  - Full automation
+- Serverless:
+  - AWS provider
+  - Multiple lambdas per config
+  - Configuring API Gateway with an API Key
+- SSH (connecting to EC2)
+- Ubuntu bash
+
+AWS Services and Resources:
+- IAM:
+  - Users
+  - Roles
+  - Policies
+- Networking:
+  - VPC
+  - Subnets
+  - Security Groups
+  - Internet Gateway
+  - Elastic IP
+  - Routing Table
+  - Route53 DNS Record, Hosted Zone, Rules
+  - AWS Certificate Manager cert for HTTPS
+- Storage:
+  - S3 Buckets
+  - EBS volumes
+- Compute:
+  - EC2
+  - EKS on EC2
+  - Lambda
+- Facing Public Traffic:
+  - Classic Load Balancer
+  - API Gateway to Lambda (API key, stage, custom domain, HTTPS)
