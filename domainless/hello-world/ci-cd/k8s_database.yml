@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: db-pv
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  csi:
+    driver: ebs.csi.aws.com
+    fsType: ext4
+    volumeHandle: vol-0ca41c25e0079308e
+  persistentVolumeReclaimPolicy: Retain
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  volumeName: db-pv
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+spec:
+  ports:
+    - port: 3306
+  selector:
+    app: db
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      volumes:
+        - name: db-persistent-storage
+          persistentVolumeClaim:
+            claimName: db-pvc
+      containers:
+        - name: mysql
+          image: mysql:8
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: password
+          volumeMounts:
+            - name: db-persistent-storage
+              mountPath: /var/lib/mysql

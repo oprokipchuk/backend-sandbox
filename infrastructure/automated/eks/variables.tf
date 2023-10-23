@@ -12,3 +12,17 @@ variable "domain" {
   type = string
   description = "Registered name of the domain used to publish the EKS cluster"
 }
+
+variable "addons" {
+  type = list(object({
+    name    = string
+    version = string
+  }))
+
+  default = [
+    {
+      name    = "aws-ebs-csi-driver"
+      version = "v1.23.1-eksbuild.1"
+    }
+  ]
+}
