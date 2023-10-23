@@ -95,3 +95,5 @@ AWS Services and Resources:
 - [ ] Lambda functions: automate deployment
 - [ ] Lambda functions: set up local testing
 - [ ] Lambda functions: testing pipeline
+- [ ] Terraform: build EKS stack through modules
+- [ ] Terraform: provision LB through ingress and AWS LB Controller
