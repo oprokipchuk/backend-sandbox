@@ -5,7 +5,7 @@ pipeline {
     agent any
 
     stages {
-        stage('Application: Maven Build') {
+        stage('Application: Maven Build & Unit Tests') {
             agent {
                 docker {
                     image 'maven:3.9.4-eclipse-temurin-17-alpine'
@@ -15,6 +15,32 @@ pipeline {
             steps {
                 dir(PROJECT_PATH) {
                     sh 'mvn --no-transfer-progress clean install'
+                }
+            }
+        }
+        stage('Test: Integration Tests') {
+            agent {
+                docker {
+                    image 'maven:3.9.4-eclipse-temurin-17-alpine'
+                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
+            steps {
+                dir(PROJECT_PATH) {
+                    sh 'mvn --no-transfer-progress verify -DskipUnitTests=true -P integration-tests'
+                }
+            }
+        }
+        stage('Test: Component Tests') {
+            agent {
+                docker {
+                    image 'maven:3.9.4-eclipse-temurin-17-alpine'
+                    args '-u root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
+            steps {
+                dir(PROJECT_PATH) {
+                    sh 'mvn --no-transfer-progress verify -DskipUnitTests=true -P component-tests'
                 }
             }
         }

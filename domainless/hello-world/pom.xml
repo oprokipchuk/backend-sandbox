@@ -18,6 +18,9 @@
     <properties>
         <java.version>17</java.version>
         <skipUnitTests>false</skipUnitTests>
+
+        <spring-cloud-contract.version>4.0.3</spring-cloud-contract.version>
+        <cucumber.version>7.14.0</cucumber.version>
     </properties>
 
     <dependencies>
@@ -102,6 +105,47 @@
             <artifactId>mysql</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-contract-verifier</artifactId>
+            <version>${spring-cloud-contract.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-contract-wiremock</artifactId>
+            <version>${spring-cloud-contract.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-contract-stub-runner</artifactId>
+            <version>${spring-cloud-contract.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-java</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-junit-platform-engine</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.cucumber</groupId>
+            <artifactId>cucumber-spring</artifactId>
+            <version>${cucumber.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-suite</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -147,6 +191,36 @@
             <build>
                 <plugins>
                     <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>add-integration-tests-source</id>
+                                <goals>
+                                    <goal>add-test-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>src/testIntegration/java</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>add-integration-tests-resource</id>
+                                <goals>
+                                    <goal>add-test-resource</goal>
+                                </goals>
+                                <configuration>
+                                    <resources>
+                                        <resource>
+                                            <directory>/src/testIntegration/resources</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <executions>
@@ -164,6 +238,21 @@
                             </execution>
                         </executions>
                     </plugin>
+                    <plugin>
+                        <groupId>org.springframework.cloud</groupId>
+                        <artifactId>spring-cloud-contract-maven-plugin</artifactId>
+                        <version>${spring-cloud-contract.version}</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <contractsDirectory>src/testIntegration/resources/contracts</contractsDirectory>
+                            <baseClassForTests>
+                                com.github.oprokipchuk.helloworld.integrationtest.contract.ControllerTestBaseClass
+                            </baseClassForTests>
+                            <failOnNoContracts>false</failOnNoContracts>
+                            <nameSuffixForTests>IT</nameSuffixForTests>
+                            <jarSkip>true</jarSkip>
+                        </configuration>
+                    </plugin>
                 </plugins>
             </build>
         </profile>
@@ -171,6 +260,37 @@
             <id>component-tests</id>
             <build>
                 <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>build-helper-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>add-component-tests-source</id>
+                                <phase>generate-test-sources</phase>
+                                <goals>
+                                    <goal>add-test-source</goal>
+                                </goals>
+                                <configuration>
+                                    <sources>
+                                        <source>src/testComponent/java</source>
+                                    </sources>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>add-component-tests-resource</id>
+                                <goals>
+                                    <goal>add-test-resource</goal>
+                                </goals>
+                                <configuration>
+                                    <resources>
+                                        <resource>
+                                            <directory>/src/testComponent/resources</directory>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-failsafe-plugin</artifactId>

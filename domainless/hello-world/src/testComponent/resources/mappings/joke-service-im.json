@@ -1,0 +1,13 @@
+{
+  "request" : {
+    "url" : "/random_joke",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"type\":\"general\",\"setup\":\"Which planet loves to sing?\",\"punchline\":\"Nep-tune!\",\"id\":317}",
+    "headers" : {
+      "Content-Type" : "application/json"
+    }
+  }
+}

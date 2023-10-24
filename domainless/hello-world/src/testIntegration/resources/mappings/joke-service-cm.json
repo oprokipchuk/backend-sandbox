@@ -1,0 +1,13 @@
+{
+  "request" : {
+    "url" : "/random_joke",
+    "method" : "GET"
+  },
+  "response" : {
+    "status" : 200,
+    "body" : "{\"type\":\"general\",\"setup\":\"Why did Dracula lie in the wrong coffin?\",\"punchline\":\"He made a grave mistake.\",\"id\":317}",
+    "headers" : {
+      "Content-Type" : "application/json"
+    }
+  }
+}

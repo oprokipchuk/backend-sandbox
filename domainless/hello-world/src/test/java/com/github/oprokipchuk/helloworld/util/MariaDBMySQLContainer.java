@@ -1,4 +1,4 @@
-package com.github.oprokipchuk.helloworld;
+package com.github.oprokipchuk.helloworld.util;
 
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
