@@ -213,7 +213,7 @@
                                 <configuration>
                                     <resources>
                                         <resource>
-                                            <directory>/src/testIntegration/resources</directory>
+                                            <directory>src/testIntegration/resources</directory>
                                         </resource>
                                     </resources>
                                 </configuration>
@@ -284,7 +284,7 @@
                                 <configuration>
                                     <resources>
                                         <resource>
-                                            <directory>/src/testComponent/resources</directory>
+                                            <directory>src/testComponent/resources</directory>
                                         </resource>
                                     </resources>
                                 </configuration>
