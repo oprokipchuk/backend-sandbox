@@ -6,7 +6,7 @@ This project was created to reproduce a microservices application's production e
 > *All diagrams here are clickable and editable. You can view and edit them by clicking on the diagrams below.*
 
 ## Application
-Currently, the application consists of only a hello-world Spring Boot application running in a Kubernetes cluster.
+Currently, the application consists of only a hello-world Spring Boot application running in a Kubernetes cluster The application also provides sample usage of a relational database and third-party service.
 
 ### Application Diagram
 [![Application Diagram](https://github.com/oprokipchuk/backend-sandbox/blob/master/diagrams/application.drawio.svg?raw=true)](https://viewer.diagrams.net/?tags=%7B%7D&target=blank&highlight=0000ff&edit=https%3A%2F%2Fapp.diagrams.net%2F%23Hoprokipchuk%252Fbackend-sandbox%252Fmaster%252Fdiagrams%252Fapplication.drawio.svg&layers=1&nav=1&title=application.drawio.svg#Uhttps%3A%2F%2Fraw.githubusercontent.com%2Foprokipchuk%2Fbackend-sandbox%2Fmaster%2Fdiagrams%2Fapplication.drawio.svg)
