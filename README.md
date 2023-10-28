@@ -31,12 +31,38 @@ Here is the list of the technologies used in this sandbox.
 Applications:
 - Backend Service:
   - Spring Boot
-  - Maven
+  - Lombok
+  - Persistence:
+    - Spring Data JPA
+    - Flyway
 - Lambda cluster controls:
   - Python
-  - Serverless 
+  - Serverless
+
+Databases:
+- MySQL
+
+Testing:
+- Methods:
+  - Unit Testing
+  - Integration Testing
+  - Contract Testing
+  - Scenario Component Testing
+- Tools:
+  - JUnit 5
+  - Mockito
+  - H2
+  - Testcontainers
+  - Cucumber
+  - Wiremock
+  - Spring Cloud Contract
 
 Tools:
+- Maven:
+  - Profiles
+  - Custom test sources
+  - Custom test resources
+  - Test files patterns
 - Docker:
   - Multi-Platform image build
   - DockerHub repo
@@ -47,6 +73,7 @@ Tools:
   - Configuring kube-contexts
   - Applying/deleting file-resources
   - Triggering external resources through Kubernetes configuration and annotations
+  - Persistent volumes
 - Jenkins:
   - Hosted on EC2
   - Docker Agents
@@ -63,7 +90,7 @@ Tools:
   - Multiple lambdas per config
   - Configuring API Gateway with an API Key
 - SSH (connecting to EC2)
-- Ubuntu bash
+- Ubuntu bash (+ automation scripts)
 
 AWS Services and Resources:
 - IAM:
@@ -84,11 +111,14 @@ AWS Services and Resources:
   - EBS volumes
 - Compute:
   - EC2
-  - EKS on EC2
+  - EKS on EC2 (+ EBS driver)
   - Lambda
 - Facing Public Traffic:
   - Classic Load Balancer
   - API Gateway to Lambda (API key, stage, custom domain, HTTPS)
+
+Practices:
+ - Local CI (in progress)
 
 ## TODO
 - [ ] Jenkins: add build configuration info (settings, parameters) into Jenkinsfiles
